@@ -29,13 +29,13 @@ while : ;do
       pretty_host=$(getent hosts ${host})
       gotdns=$?
       read -r _ pretty_host _ <<< "$pretty_host" #grab 2nd column
-      if [[ $? -eq 0 ]] ;then
+      if [[ $gotdns -eq 0 ]] ;then
          pretty_host="${pretty_host}(${host})"  #hostname lookup worked
       else
          pretty_host="${host}"  #hostname lookup failed, just use ip
       fi
       term_lines=$(tput lines)
-      term_lines=$((term_lines-2))
+      term_lines=$((term_lines-3))
       if [[ ${#known_hosts[@]} -gt ${term_lines} ]] ;then
          echo -ne "\t${pretty_host}"
       else

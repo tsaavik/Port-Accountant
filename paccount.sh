@@ -17,7 +17,6 @@ if [[ ${mon_port} = *[^0-9\-]* ]] || [[ -z "${mon_port}" ]] ;then
    exit 1
 fi
 
-
 if [[ $(whoami) != "root" ]] ;then
   echo "You must run this script as root (for tcpdump)"
   exit 1
@@ -34,8 +33,18 @@ while : ;do
       fi
       exclude_hosts+=" and not src host ${host}"
    done
-   new_host=$(tcpdump -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null |awk '{print $3}')
+   #new_host=$(tcpdump -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null |awk '{print $3}')
+   new_host=$(tcpdump -i any -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
+ 
+   if [[ $? -ne 0 ]] ;then
+      echo "Sorry, tcpdump threw errorcode $?"
+      exit 1
+   fi
+
+   #Strip the hostname (or IP) down to basics
+   read -r _ _ new_host _ <<< "$new_host" #grab 3rd column
    new_host="${new_host%\.*}"
+
    known_hosts+=("$new_host")
    echo "Found new host: ${new_host} adding to list of known hosts"
 done

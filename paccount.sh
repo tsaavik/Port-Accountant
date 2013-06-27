@@ -1,6 +1,6 @@
 #!/bin/bash
 # 
-# Port Accountant v1.0 - Prints hosts attempting connections to a port on local system
+# Port Accountant v1.0 - Easily find out what servers are attempting to connect to your service (port).
 # David Mcanulty 2013
 #
 # Requires: tcpdump

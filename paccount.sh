@@ -6,7 +6,6 @@
 # Requires: tcpdump
 mon_port=$1
 known_hosts=()
-lines=$(tput lines)
 
 echo "Port Accountant v1.0 David Mcanulty 2013"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
@@ -35,7 +34,7 @@ while : ;do
       else
          pretty_host="${host}"  #hostname lookup failed, just use ip
       fi
-      if [[ ${#known_hosts[@]} -gt ${lines} ]] ;then
+      if [[ ${#known_hosts[@]} -gt $(tput lines) ]] ;then
          echo -ne "\t${pretty_host}"
       else
          echo -ne "\t${pretty_host}\n"

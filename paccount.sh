@@ -33,7 +33,6 @@ while : ;do
       fi
       exclude_hosts+=" and not src host ${host}"
    done
-   #new_host=$(tcpdump -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null |awk '{print $3}')
    new_host=$(tcpdump -i any -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
  
    if [[ $? -ne 0 ]] ;then
@@ -48,4 +47,3 @@ while : ;do
    known_hosts+=("$new_host")
    echo -ne "\nFound new host: ${new_host} adding to list of known hosts\n"
 done
-

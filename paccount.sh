@@ -26,14 +26,22 @@ while : ;do
    echo "The following ${#known_hosts[@]} hosts have connected to port $mon_port of ${HOSTNAME} so far:"
    exclude_hosts=""
    for host in ${known_hosts[@]}; do
-      if [[ ${#known_hosts[@]} -gt 18 ]] ;then
-         echo -ne "\t${host}"
+      pretty_host=$(getent hosts ${host})
+      gotdns=$?
+      read -r _ pretty_host _ <<< "$pretty_host" #grab 2nd column
+      if [[ $? -eq 0 ]] ;then
+         pretty_host="${pretty_host}(${host})"  #hostname lookup worked
       else
-         echo -ne "\t${host}\n"
+         pretty_host="${host}"  #hostname lookup failed, just use ip
+      fi
+      if [[ ${#known_hosts[@]} -gt 18 ]] ;then
+         echo -ne "\t${pretty_host}"
+      else
+         echo -ne "\t${pretty_host}\n"
       fi
       exclude_hosts+=" and not src host ${host}"
    done
-   new_host=$(tcpdump -i any -Nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
+   new_host=$(tcpdump -i any -nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
  
    if [[ $? -ne 0 ]] ;then
       echo "Sorry, tcpdump threw errorcode $?"

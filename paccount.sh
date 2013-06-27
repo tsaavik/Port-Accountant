@@ -34,7 +34,9 @@ while : ;do
       else
          pretty_host="${host}"  #hostname lookup failed, just use ip
       fi
-      if [[ ${#known_hosts[@]} -gt $(tput lines) ]] ;then
+      term_lines=$(tput lines)
+      term_lines=$((term_lines-2))
+      if [[ ${#known_hosts[@]} -gt ${term_lines} ]] ;then
          echo -ne "\t${pretty_host}"
       else
          echo -ne "\t${pretty_host}\n"

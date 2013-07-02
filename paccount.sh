@@ -22,6 +22,10 @@ if [[ $(whoami) != "root" ]] ;then
   exit 1
 fi
 
+if ! which tcpdump >/dev/null ;then
+   echo "tcpdump is not installed, or missing from your path, please install"
+fi
+
 while : ;do
    echo "The following ${#known_hosts[@]} hosts have connected to port $mon_port of ${HOSTNAME} so far:"
    exclude_hosts=""

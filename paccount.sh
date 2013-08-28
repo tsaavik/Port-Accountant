@@ -6,7 +6,7 @@
 # Requires: tcpdump
 mon_port=$1
 known_hosts=()
-start_time="$(date)"
+
 echo "Port Accountant v1.0 David Mcanulty 2013"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
 
@@ -27,7 +27,7 @@ if ! which tcpdump >/dev/null ;then
 fi
 
 while : ;do
-   echo "The following ${#known_hosts[@]} hosts have connected to port $mon_port of ${HOSTNAME} since ${start_time}"
+   echo "The following ${#known_hosts[@]} hosts have connected to port $mon_port of ${HOSTNAME} so far:"
    exclude_hosts=""
    for host in ${known_hosts[@]}; do
       pretty_host=$(getent hosts ${host})
@@ -45,7 +45,7 @@ while : ;do
       else
          echo -ne "\t${pretty_host}\n"
       fi
-      exclude_hosts+=" and not src host ${host}"
+      exclude_hosts="${exclude_hosts}and not src host ${host} "
    done
    new_host=$(tcpdump -i any -nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
  
@@ -58,6 +58,6 @@ while : ;do
    read -r _ _ new_host _ <<< "$new_host" #grab 3rd column
    new_host="${new_host%\.*}"
 
-   known_hosts+=("$new_host")
+   known_hosts=("${known_hosts} ${new_host}")
    echo -ne "\nFound new host: ${new_host} adding to list of known hosts\n"
 done

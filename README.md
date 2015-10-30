@@ -10,3 +10,5 @@ Its as easy as
          crawl-66-249-65-124.googlebot.com(66.249.65.124)
          msnbot-157-55-39-12.search.msn.com(157.55.39.12)
          s420.pingdom.com(72.46.130.42)
+
+The program will continue to run updating the list above until canceled...

@@ -8,7 +8,7 @@
 mon_port=$1
 known_hosts=()
 start_time="$(date)"
-echo "Port Accountant v1.0 David Mcanulty 2013"
+echo "Port Accountant v1.1 David Mcanulty 2013-2019"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
 
 if [[ ${mon_port} = *[^0-9\-]* ]] || [[ -z "${mon_port}" ]] ;then

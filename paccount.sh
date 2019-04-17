@@ -1,7 +1,8 @@
 #!/bin/bash
 # 
-# Port Accountant v1.0 - Easily find out what servers are attempting to connect to your service (port).
+# Port Accountant v1.1 - Easily find out what servers are attempting to connect to your service (port).
 # David Mcanulty 2013
+# last update 2019
 #
 # Requires: tcpdump
 mon_port=$1
@@ -77,5 +78,5 @@ while : ;do
    new_host="${new_host%\.*}"
 
    known_hosts+=("$new_host")
-   echo -ne "\nFound new host: ${new_host} adding to list of known hosts\n"
+   echo -ne "\nFound new host: ${new_host} adding to list of known hosts $(date)\n"
 done

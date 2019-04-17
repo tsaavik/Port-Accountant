@@ -78,5 +78,5 @@ while : ;do
    new_host="${new_host%\.*}"
 
    known_hosts+=("$new_host")
-   echo -ne "\nFound new host: ${new_host} adding to list of known hosts $(date)\n"
+   echo -ne "\nFound new host: ${new_host} adding to list of known hosts at $(date)\n"
 done

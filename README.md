@@ -12,3 +12,5 @@ Its as easy as
          s420.pingdom.com(72.46.130.42)
 
 The program will continue to run updating the list above until canceled...
+You can also specifiy an optional destination host if your server is multihomed
+```./paccount.sh 80 1.2.3.4```

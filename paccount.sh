@@ -1,21 +1,24 @@
 #!/bin/bash
 # 
-# Port Accountant v1.1 - Easily find out what servers are attempting to connect to your service (port).
+# Port Accountant v1.2 - Easily find out what servers are attempting to connect to your service (port).
 # David Mcanulty 2013
-# last update 2019
+# last update 2020
 #
 # Requires: tcpdump
 mon_port=$1
+dest_host=$2
 known_hosts=()
 start_time="$(date)"
-echo "Port Accountant v1.1 David Mcanulty 2013-2019"
+echo "Port Accountant v1.2 David Mcanulty 2013-2020"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
 
 if [[ ${mon_port} = *[^0-9\-]* ]] || [[ -z "${mon_port}" ]] ;then
-   echo "(${mon_port}) is empty or a non-digit value"
-   echo "This script requires a port # on the commandline to run accounting on"
-   echo "for example: $0 80"
+   echo "Usage: $0 PORT# [optional destination host]"
    exit 1
+fi
+
+if [[ ! -z "${dest_host}" ]] ;then
+   dest_filter="and dst host ${dest_host}"
 fi
 
 if [[ $(whoami) != "root" ]] ;then
@@ -66,7 +69,7 @@ while : ;do
       exclude_hosts+=" and not src host ${host}"
    done
    current_column=1
-   new_host=$(tcpdump -i any -nq -c1 dst port $mon_port $exclude_hosts 2>/dev/null)
+   new_host=$(tcpdump -i any -nq -c1 dst port $mon_port $dest_filter $exclude_hosts 2>/dev/null)
  
    if [[ $? -ne 0 ]] ;then
       echo "Sorry, tcpdump threw errorcode $?"

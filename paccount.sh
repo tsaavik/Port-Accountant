@@ -1,23 +1,23 @@
 #!/bin/bash
 # 
-# Port Accountant v1.2 - Easily find out what servers are attempting to connect to your service (port).
+# Port Accountant v1.3 - Easily find out what servers are attempting to connect to your service (port).
 # David Mcanulty 2013
-# last update 2020
+# last update 2022
 #
 # Requires: tcpdump
 mon_port=$1
 dest_host=$2
 known_hosts=()
 start_time="$(date)"
-echo "Port Accountant v1.2 David Mcanulty 2013-2020"
+echo "Port Accountant v1.3 David Mcanulty 2013-2022"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
 
-if [[ ${mon_port} = *[^0-9\-]* ]] || [[ -z "${mon_port}" ]] ;then
+if ! [[ ${mon_port} =~ ^[0-9]+$ ]] || [[ -z "${mon_port}" ]] ;then
    echo "Usage: $0 PORT# [optional destination host]"
    exit 1
 fi
 
-if [[ ! -z "${dest_host}" ]] ;then
+if [[ -n "${dest_host}" ]] ;then
    dest_filter="and dst host ${dest_host}"
 fi
 
@@ -26,7 +26,7 @@ if [[ $(whoami) != "root" ]] ;then
   exit 1
 fi
 
-if ! which tcpdump >/dev/null ;then
+if ! command -v tcpdump >/dev/null ;then
    echo "tcpdump is not installed, or missing from your path, please install"
 fi
 
@@ -37,13 +37,13 @@ while : ;do
    term_lines=$((term_lines-2))
    echo "The following ${#known_hosts[@]} hosts have connected to port $mon_port of ${HOSTNAME} since ${start_time}"
    exclude_hosts=""
-   for host in ${known_hosts[@]}; do
+   for host in "${known_hosts[@]}"; do
       if [[ ${#known_hosts[@]} -gt ${term_lines} ]] ;then
          column_display=1
       else
          column_display=0
       fi
-      pretty_host=$(getent hosts ${host})
+      pretty_host=$(getent hosts "${host}")
       gotdns=$?
       read -r _ pretty_host _ <<< "$pretty_host" #grab 2nd column
       if [[ $gotdns -eq 0 ]] ;then
@@ -58,10 +58,10 @@ while : ;do
       if [[ ${column_display} == 1 ]] ;then
          if [[ $current_column -le $term_columns ]] ;then
             ((current_column++))
-            printf '%32s' ${pretty_host}
+            printf '%32s' "${pretty_host}"
          else
             current_column=1
-            printf '%32s\n' ${pretty_host}
+            printf '%32s\n' "${pretty_host}"
          fi
       else
          echo -ne "\t${pretty_host}\n"
@@ -69,7 +69,7 @@ while : ;do
       exclude_hosts+=" and not src host ${host}"
    done
    current_column=1
-   new_host=$(tcpdump -i any -nq -c1 dst port $mon_port $dest_filter $exclude_hosts 2>/dev/null)
+   new_host=$(tcpdump -i any -nq -c1 dst port "$mon_port" "$dest_filter" "$exclude_hosts" 2>/dev/null)
  
    if [[ $? -ne 0 ]] ;then
       echo "Sorry, tcpdump threw errorcode $?"

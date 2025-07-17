@@ -47,9 +47,7 @@ while : ;do
       gotdns=$?
       read -r _ pretty_host _ <<< "$pretty_host" #grab 2nd column
       if [[ $gotdns -eq 0 ]] ;then
-         if [[ ${column_display} == 1 ]] ;then 
-            pretty_host="${pretty_host}"  #hostname lookup worked
-         else
+         if ! [[ ${column_display} == 1 ]] ;then 
             pretty_host="${pretty_host}(${host})"  #hostname lookup worked
          fi
       else
@@ -77,7 +75,14 @@ while : ;do
    fi
 
    #Strip the hostname (or IP) down to basics
-   read -r _ _ new_host _ <<< "$new_host" #grab 3rd column
+   read -r _ _ old_style_host _ new_style_host _ <<< "$new_host" #grab 3rd column
+   # Handle newer tcpdump output
+   echo "old_style_host is :${old_style_host}:"
+   echo "new_style_host is :${new_style_host}:"
+   new_host="$old_style_host"
+   if [[ $old_style_host == "In" ]];then
+       new_host="$new_style_host"
+   fi
    new_host="${new_host%\.*}"
 
    known_hosts+=("$new_host")

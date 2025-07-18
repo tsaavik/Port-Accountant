@@ -1,8 +1,8 @@
 #!/bin/bash
 # 
-# Port Accountant v1.3 - Easily find out what servers are attempting to connect to your service (port).
+# Port Accountant v1.4 - Easily find out what servers are attempting to connect to your service (port).
 # David Mcanulty 2013
-# last update 2022
+# last update 2025
 #
 # Requires: tcpdump
 mon_port=$1

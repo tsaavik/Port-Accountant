@@ -9,7 +9,7 @@ mon_port=$1
 dest_host=$2
 known_hosts=()
 start_time="$(date)"
-echo "Port Accountant v1.3 David Mcanulty 2013-2022"
+echo "Port Accountant v1.4 David Mcanulty 2013-2025"
 echo -e "\t- Prints hosts attempting connections to a port on local system\n"
 
 if ! [[ ${mon_port} =~ ^[0-9]+$ ]] || [[ -z "${mon_port}" ]] ;then
